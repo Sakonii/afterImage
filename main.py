@@ -1,19 +1,17 @@
 
 import argparse
-from inference import *
+from segmentation import *
 
 
 def main():
 
-    parser = argparse.ArgumentParser(description = 'Mode Selection')
-    parser.add_argument('--mode_select', type = str, default = 'inference', 
-                        help='Mode Selection: train / inference')                   
+    parser = argparse.ArgumentParser(description = 'Image File Name')
+    parser.add_argument('--image', type = str, default = 'img.png', 
+                        help='Enter the image file name')                   
 
     args = parser.parse_args()
-    print(f'Selected Mode: {args.mode_select}')   
 
-    if args.mode_select == 'inference':
-        inference.start_inference()
+    Segmentation(fname_img = args.image).start_segmentation()
 
 
 if __name__ == "__main__":

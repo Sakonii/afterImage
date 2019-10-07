@@ -40,3 +40,13 @@ python3.7 -m pip install --user opencv-python
 python3.7 -m pip install --user jupyterlab
 sudo apt install jupyter-notebook
 ```
+
+## Inference
+
+Example:
+```console
+python3.7 main.py --image img.png
+```
+
+CLI Arguments:
+* '--image' : Filename of input image located at img_input directory
