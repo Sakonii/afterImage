@@ -41,6 +41,14 @@ python3.7 -m pip install --user jupyterlab
 sudo apt install jupyter-notebook
 ```
 
+## Model
+
+Download trained models
+(bash from .git directory)
+```console
+sh ./models/download_models.sh
+```
+
 ## Inference
 
 Example:

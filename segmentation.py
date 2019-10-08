@@ -6,7 +6,6 @@ from fastai.vision import *
 from fastai.callbacks.hooks import *
 from fastai.utils.mem import *
 
-from cv2 import cv2
 
 
 class Segmentation:  
@@ -18,7 +17,17 @@ class Segmentation:
 
         self.img_path = './img_input/' + fname_img
         self.img  = open_image(self.img_path)
-        
+
+
+    def show(self):
+        "Displays content input image and its corresponding segmentation in separate windows"
+
+        cv2.imshow('image', self.img)
+        cv2.imshow('mask' , self.mask)
+
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
 
     global acc_camvid
     def acc_camvid(self, input, target):
@@ -27,17 +36,19 @@ class Segmentation:
 
     
     def start_segmentation(self):
+        "Returns np.ndarray content image and segmented mask from the content input image"
 
-        self.pred = self.learn.predict(self.img) 
-        self.img.show(y = self.pred[0], figsize = (12,12))
+        self.pred = self.learn.predict(self.img)
+        self.mask = self.pred[0]
 
-        # Convert from torch style image to OpenCV compatible numpy array
+        del self.pred
+        gc.collect()
+
+        "Convert from torch style Image to OpenCV compatible np.ndarray"
         self.img = image2np(self.img.data * 255).astype(np.uint8)
         cv2.cvtColor(src = self.img, dst = self.img, code = cv2.COLOR_BGR2RGB)
 
-        cv2.imshow('image', self.img)
-        
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        self.mask = image2np(self.mask.data).astype(np.uint8)
+        cv2.cvtColor(src = self.mask, dst = self.mask, code = cv2.COLOR_BGR2RGB)
 
-
+        return self.img, self.mask
