@@ -46,7 +46,9 @@ sudo apt install jupyter-notebook
 Download trained models
 (bash from .git directory)
 ```console
+cd models
 sh ./models/download_models.sh
+cd ..
 ```
 
 ## Inference
