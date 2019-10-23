@@ -14,10 +14,7 @@ def main():
     args = parser.parse_args()
 
     img, mask, num_classes = Segmentation(fname_img=args.image).start_segmentation()
-
-    img_obj = ImageObjects(img, mask, num_classes)
-    img_obj.detect_objects()
-    img_obj.show()
+    ImageObjects(img, mask, num_classes).inference()
 
 
 if __name__ == "__main__":

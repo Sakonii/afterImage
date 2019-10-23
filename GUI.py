@@ -3,32 +3,62 @@ import numpy as np
 
 
 class ImageObjects:
-    "A Wrapper for ImageObjects' objects"
+    "A Wrapper for ImageObjects' Objects"
 
     def __init__(self, img, mask, num_classes):
 
         self.img = img
         self.mask = mask
 
-    def show(self):
-        "Displays Segmentation mask bounded by detected image object's contours"
+        self.num_classes = num_classes
+        self.contours_list = []
 
-        cv2.imshow("Image Objects", self.mask_temp)
+    def show_mask(self):
+        "Displays Segmentation Mask"
+
+        "This will be the default window for inference"
+        cv2.imshow("Image Objects", self.mask)
 
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
     def detect_objects(self):
-        "Returns contours i.e. vector<vector> of detected image object of car (5)"
+        "Updates the list of contours of detected image objects"
 
-        "Test for class 5 i.e. bicyclist"
-        self.class_no = 5
+        "Iterate over every class and find its corresponding image object as a list of contours"
+        for Class in range(self.num_classes):
+            mask_temp = cv2.inRange(self.mask, np.array([Class]), np.array([Class]))
+            contours_temp, _ = cv2.findContours(
+                mask_temp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
+            )
+            self.contours_list.append(contours_temp)
 
-        self.mask_temp = cv2.inRange(
-            self.mask, np.array([self.class_no]), np.array([self.class_no])
-        )
-        self.contours_temp, _ = cv2.findContours(
-            self.mask_temp, 3, cv2.CHAIN_APPROX_NONE
-        )
+    def draw_objects(self):
+        "Returns np.ndarray image bounded by detected image object's contours"
 
-        cv2.drawContours(self.mask_temp, self.contours_temp, -1, (255, 255, 255), 3)
+        "Create a null matrix that matches the size of output"
+        img_shape = self.mask.shape
+        mask_output = np.zeros(img_shape)
+
+        for Class in range(self.num_classes):
+            print(f"contours_list = {len(self.contours_list)}")
+            print(f"num_classes = {self.num_classes}")
+            cv2.drawContours(
+                mask_output, self.contours_list[Class], -1, (128, 128, 128), 3
+            )
+
+        return mask_output
+
+    def show_object_contours(self):
+        "Displays Image Object's Contours"
+
+        mask_contours = self.draw_objects()
+        cv2.imshow("Image Objects", mask_contours)
+
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+    def inference(self):
+        self.detect_objects()
+        self.draw_objects()
+        self.show_object_contours()
