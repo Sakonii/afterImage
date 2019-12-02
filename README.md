@@ -1,4 +1,7 @@
-# Object-Deletion
+# Inpaint Network
+
+An attempt to assist photo editing tasks using Deep Learning techniques.
+
 
 ## Requirements and dependencies:
 
@@ -41,15 +44,17 @@ python3.7 -m pip install --user jupyterlab
 sudo apt install jupyter-notebook
 ```
 
+
 ## Model
 
 Download trained models
 (bash from .git directory)
 ```console
 cd models
-sh ./models/download_models.sh
+sh ./download_models.sh
 cd ..
 ```
+
 
 ## Inference
 

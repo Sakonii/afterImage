@@ -54,3 +54,6 @@ class Segmentation:
         cv2.cvtColor(src=self.mask, dst=self.mask, code=cv2.COLOR_BGR2RGB)
 
         return self.img, self.mask, self.num_classes
+
+
+acc_camvid = lambda: None

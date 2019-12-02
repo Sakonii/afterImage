@@ -9,3 +9,4 @@ __pycache__/
 tutorial.ipynb
 img_input/img4.png
 test.py
+models/1_segmentation_model.pkl
