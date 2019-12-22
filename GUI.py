@@ -5,18 +5,19 @@ import numpy as np
 class ImageObjects:
     "A Wrapper for ImageObjects' Objects"
 
-    def __init__(self, img, mask, num_classes):
+    def __init__(self, img, mask, classes):
 
         self.img = img
         self.mask = mask
 
-        self.num_classes = num_classes
-        self.contours_list = []
+        self.num_classes = len(classes)
+        self.classes = classes
 
         self.img_display = None
         self.key_pressed = None
 
         self.obj_selected = []
+        self.contours_list = []
 
         # This will be the default window for inference
         cv2.namedWindow(winname="Image Objects")
@@ -25,16 +26,19 @@ class ImageObjects:
         )
         cv2.setMouseCallback("Image Objects", self.mouse_events)
 
-    def contour_containing_point(self, x, y):
+    def contour_containing_point(self, x, y, boolDebug=True):
         "Returns the contour under which the co-ordinate falls"
 
-        for contours in self.contours_list:
+        for Class in range(self.num_classes):  # for contours in self.contours_list:
+            contours = self.contours_list[Class]
             for contour in contours:
                 if (
                     cv2.pointPolygonTest(contour=contour, pt=(x, y), measureDist=False)
                     >= 0
                     and contour is not self.obj_selected
                 ):
+                    if boolDebug:
+                        print(f"{self.classes[Class]}")
                     return contour
                 else:
                     pass

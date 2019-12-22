@@ -18,6 +18,7 @@ class Segmentation:
 
         "learn.data -> DataBunch, learn.data.c -> count(learn.data.classes)"
         self.num_classes = self.learn.data.c
+        self.classes = self.learn.data.classes
 
         self.img_path = "./img_input/" + fname_img
         self.img = open_image(self.img_path)
@@ -53,7 +54,7 @@ class Segmentation:
         self.mask = image2np(self.mask.data).astype(np.uint8)
         cv2.cvtColor(src=self.mask, dst=self.mask, code=cv2.COLOR_BGR2RGB)
 
-        return self.img, self.mask, self.num_classes
+        return self.img, self.mask, self.classes
 
 
 acc_camvid = lambda: None

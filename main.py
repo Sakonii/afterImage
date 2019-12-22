@@ -13,8 +13,8 @@ def main():
 
     args = parser.parse_args()
 
-    img, mask, num_classes = Segmentation(fname_img=args.image).start_segmentation()
-    ImageObjects(img, mask, num_classes).inference()
+    img, mask, classes = Segmentation(fname_img=args.image).start_segmentation()
+    ImageObjects(img, mask, classes).inference()
 
 
 if __name__ == "__main__":
