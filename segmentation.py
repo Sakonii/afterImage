@@ -43,6 +43,7 @@ class Segmentation:
 
         self.pred = self.learn.predict(self.img)
         self.mask = self.pred[0]
+        #self.img.resize(self.mask.shape)
 
         del self.pred
         gc.collect()

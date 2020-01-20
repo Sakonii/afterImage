@@ -122,16 +122,21 @@ class ImageObjects:
             thickness=cv2.FILLED,
         )
         if inPlace:
-            self.img_save()
+            self.img_save(toDisk=False)
 
-    def img_save(self):
+    def img_save(self, toDisk=True):
         "Save display image 'self.img_display' to actual image 'self.img' "
         self.obj_selected = []
         self.img = self.img_display
 
+        if toDisk:
+            self.img_disk = self.img_display
+
     def img_reload(self):
         "Re-loads display image from actual image"
-        self.img_display = np.copy(self.img)
+        self.img = np.copy(self.img_disk)
+        self.img_display = np.copy(self.img_disk)
+
         self.obj_selected = []
         self.show_objects(fromClean=False)
 
@@ -166,6 +171,7 @@ class ImageObjects:
                 # If none of the object is selected
                 if self.key_pressed & 0xFF == ord("s"):
                     self.img_save()
+                    print("Progress Saved!")
                 else:
                     print(f"Trigger a defined keyboard or mouse event")
 
