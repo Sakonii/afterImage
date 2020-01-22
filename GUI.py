@@ -7,7 +7,7 @@ class ImageObjects:
 
     def __init__(self, img, mask, classes):
 
-        self.img = img
+        self.img_disk = self.img = img
         self.mask = mask
 
         self.num_classes = len(classes)

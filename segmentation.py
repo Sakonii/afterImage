@@ -9,18 +9,18 @@ from fastai.utils.mem import gc
 class Segmentation:
     "A Wrapper for Segmentation related objects"
 
-    def __init__(self, fname_img):
+    def __init__(
+        self, fname_img, model, path_to_learner="./models", path_to_input="./img_input/"
+    ):
 
-        self.path_to_learner = "./models"
-        self.learn = load_learner(
-            path=self.path_to_learner, file="1_segmentation_model.pkl"
-        )
+        self.path_to_learner = path_to_learner
+        self.learn = load_learner(path=self.path_to_learner, file=model)
 
         "learn.data -> DataBunch, learn.data.c -> count(learn.data.classes)"
         self.num_classes = self.learn.data.c
         self.classes = self.learn.data.classes
 
-        self.img_path = "./img_input/" + fname_img
+        self.img_path = path_to_input + fname_img
         self.img = open_image(self.img_path)
 
     def show(self):
@@ -43,7 +43,6 @@ class Segmentation:
 
         self.pred = self.learn.predict(self.img)
         self.mask = self.pred[0]
-        #self.img.resize(self.mask.shape)
 
         del self.pred
         gc.collect()
@@ -55,6 +54,11 @@ class Segmentation:
         self.mask = image2np(self.mask.data).astype(np.uint8)
         cv2.cvtColor(src=self.mask, dst=self.mask, code=cv2.COLOR_BGR2RGB)
 
+        self.img = cv2.resize(
+            self.img,
+            dsize=(self.mask.shape[1], self.mask.shape[0]),
+            interpolation=cv2.INTER_CUBIC,
+        )
         return self.img, self.mask, self.classes
 
 
