@@ -1,7 +1,8 @@
 import argparse
 
 from segmentation import Segmentation, acc_camvid
-from GUI import ImageObjects
+from inference import ImageObjects
+from inpainting import FeatureLoss
 
 
 def main():
@@ -9,7 +10,7 @@ def main():
     img, mask, classes = Segmentation(
         fname_img=args.image, model=args.model_segmentation
     ).start_segmentation()
-    ImageObjects(img, mask, classes).inference()
+    ImageObjects(img, mask, classes, model=args.model_inpainting).inference()
 
 
 if __name__ == "__main__":
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model_inpainting",
         type=str,
-        default="2_inpainting_perceptual_shape.pth",
+        default="2_inpainting_perceptual_text.pkl",
         help="Pre-trained Weights for Inpainting",
     )
     args = parser.parse_args()
