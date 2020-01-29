@@ -1,1 +1,0 @@
-wget https://uc073b15e61c3b7c94fd12d1ae15.dl.dropboxusercontent.com/cd/0/get/AtdaTiZ1XlX1JxxdyDFabHrPytp8g0CIS4DP8zkb0EA0HfwziFiPbhn5-ngWOqD0owLYBtBDY66ISOVEOXvFhgT9ggEpQpQxPlJTx3aZOnxCNjoEwUWo6onH6uvjUtLBeUM/file?dl=1# --output-document '1_segmentation_model.pkl'

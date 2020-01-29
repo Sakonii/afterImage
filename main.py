@@ -27,7 +27,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model_inpainting",
         type=str,
-        default="2_inpainting_perceptual_text.pkl",
+        default="2_inpainting_perceptual_shape.pkl",
         help="Pre-trained Weights for Inpainting",
     )
     args = parser.parse_args()

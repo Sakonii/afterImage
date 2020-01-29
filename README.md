@@ -1,67 +1,49 @@
 # Inpaint Network
 
 An attempt to assist photo editing tasks using Deep Learning techniques.
+This repo remains un-updated till release of fastai-v2.
 
+## Requirements and dependencies
 
-## Requirements and dependencies:
-
-
-1.  Python3
-```console
+``` bash
+# Python3.7
 apt-get install python3.7-dev
-```
 
-2.  python3.7-pip 
-```console
+# python3.7-pip
 sudo apt-get install python3-pip
 python3.7 -m pip install pip
-```
 
-3.  Pytorch
-```console
-sudo -H python3.7 -m pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-```
-For GPU or other version: https://pytorch.org/get-started/locally/
+# Pytorch
+sudo -H python3.7 -m pip install torch==1.3.0+cpu torchvision==0.4.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+# For GPU or other version: https://pytorch.org/get-started/locally/
 
-4.  FastAI
-```console
+# FastAI
 python3.7 -m pip install --user fastai
-```
 
-5.  Pillow-5.1.0
-```console
+# Pillow-5.1.0
 python3.7 -m pip install --user -U Pillow
-```
 
-6.  OpenCV-4.1.1.26
-```console
+# OpenCV-4.1.1.26
 python3.7 -m pip install --user opencv-python
-```
 
-7.  Jupyter
-```console
+# Jupyter
 python3.7 -m pip install --user jupyterlab
 sudo apt install jupyter-notebook
 ```
 
-
 ## Model
 
-Download trained models
-(bash from .git directory)
-```console
-cd models
-sh ./download_models.sh
-cd ..
-```
-
+``` bash
+# Download trained models to ./models directory
+https://drive.google.com/open?id=1-1GmGvRSU_bZbWG604y_Uuz3hVU8YTKD
+https://drive.google.com/open?id=1h45VaLNWvy9WtN7cvFkm94ihWCBriK49
 
 ## Inference
 
-Example:
-```console
+``` bash
+# Example:
 python3.7 main.py --image img.png
-```
 
-CLI Arguments:
+# CLI Arguments:
 * '--image' : Filename of input image located at img_input directory
+```

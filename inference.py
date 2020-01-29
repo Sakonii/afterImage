@@ -10,7 +10,6 @@ class ImageObjects:
     def __init__(
         self, img, mask, classes, model, path_to_learner="./models",
     ):
-
         self.img_disk = self.img = img
         self.mask = mask
 
@@ -53,7 +52,6 @@ class ImageObjects:
 
     def show_mask(self):
         "Displays Segmentation Mask"
-
         cv2.imshow(winname="Image Objects", mat=self.mask)
 
         if cv2.waitKey(0) & 0xFF == ord("q"):
@@ -138,6 +136,7 @@ class ImageObjects:
 
         if toDisk:
             self.img_disk = self.img_display
+            cv2.imwrite("./img_output/img.jpg", self.img_disk)
 
     def img_reload(self):
         "Re-loads display image from actual image"
@@ -154,6 +153,15 @@ class ImageObjects:
         if inPlace:
             self.img_save(toDisk=False)
 
+    def print_console(self):
+        print(
+            "Usage:\n\t1.) Register Left-click to select an image object"
+            "\n\t2.) Press 'd' to delete the object."
+            "\n\t3.) Press 'f' to apply inpainting"
+            "\n\t4.) Press 'r' to reset changes"
+            "\n\t5.) Press 'q' to quit"
+        )
+
     def keyboard_events(self):
         "Non-callback keyboard input function for image manipulation"
 
@@ -169,6 +177,7 @@ class ImageObjects:
                 continue
 
             elif self.key_pressed & 0xFF == ord("f"):
+                print("Inpainting, this may take a while ...")
                 self.inpaint()
                 self.show_objects(fromClean=False)
                 print("inpainted")
@@ -210,6 +219,7 @@ class ImageObjects:
 
     def inference(self):
         "Run Image Manipulation inference"
+        self.print_console()
         self.detect_objects()
         self.show_objects(fromClean=True)
         self.keyboard_events()

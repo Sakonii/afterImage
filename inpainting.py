@@ -60,7 +60,8 @@ class Inpainting:
         self.learn = load_learner(path=self.path_to_learner, file=model)
 
         "Convert np.ndarray to torch style Image"
-        self.img = Image(pil2tensor(img, np.uint8))
+        self._img = np.copy(img)
+        self.img = Image(pil2tensor(img, np.float32).div_(255))
 
     def start_inpainting(self):
         "Returns inpainted image"
@@ -72,4 +73,9 @@ class Inpainting:
         self.img = image2np(self.img.data * 255).astype(np.uint8)
         cv2.cvtColor(src=self.img, dst=self.img, code=cv2.COLOR_BGR2RGB)
 
+        self.img = cv2.resize(
+            self.img,
+            dsize=(self._img.shape[1], self._img.shape[0]),
+            interpolation=cv2.INTER_CUBIC,
+        )
         return self.img

@@ -12,7 +12,6 @@ class Segmentation:
     def __init__(
         self, fname_img, model, path_to_learner="./models", path_to_input="./img_input/"
     ):
-
         self.path_to_learner = path_to_learner
         self.learn = load_learner(path=self.path_to_learner, file=model)
 

@@ -12,3 +12,4 @@ test.py
 segmentation.pyc
 models/1_segmentation_model.pkl
 models/2_inpainting_perceptual_text.pkl
+models/2_inpainting_perceptual_shape.pkl
