@@ -4,7 +4,7 @@ import numpy as np
 from inpainting import Inpainting
 
 
-class ImageObjects:
+class Inference:
     "A Wrapper for ImageObjects' Objects"
 
     def __init__(

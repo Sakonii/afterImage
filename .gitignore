@@ -7,9 +7,6 @@
 .vscode/
 __pycache__/
 tutorial.ipynb
-img_input/img4.png
-test.py
-segmentation.pyc
-models/1_segmentation_model.pkl
-models/2_inpainting_perceptual_text.pkl
+#img_input/img3.png
+Untitled.ipynb
 models/2_inpainting_perceptual_shape.pkl

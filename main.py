@@ -1,34 +1,46 @@
 import argparse
 
-from segmentation import Segmentation, acc_camvid
-from inference import ImageObjects
+from cv2 import cv2
+from segmentation import Segmentation
+from inference import Inference
 from inpainting import FeatureLoss
 
 
 def main():
-
-    img, mask, classes = Segmentation(
-        fname_img=args.image, model=args.model_segmentation
-    ).start_segmentation()
-    ImageObjects(img, mask, classes, model=args.model_inpainting).inference()
+    segmentation = Segmentation(    # img, mask, maskDetails
+        modelWeights=args.model_segmentation, cfgPath=args.cfg_path
+    )#.start_segmentation(img=cv2.imread(args.img_path + args.image))
+    segmentation.start_segmentation(img=cv2.imread(args.img_path + args.image))
+    segmentation.draw_segmentation(inPlace=True)
+    segmentation.show()
+    #Inference(img, mask, maskDetails, model=args.model_inpainting).inference()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Image File Name")
     parser.add_argument(
-        "--image", type=str, default="img.png", help="Enter the image file name"
+        "--image",
+        type=str,
+        default="img.png",
+        help="Enter the image file name located at ./img_input/",
     )
     parser.add_argument(
         "--model_segmentation",
         type=str,
-        default="1_segmentation_model.pkl",
+        default="http://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_50_3x/139514569/model_final_c10459.pkl",
         help="Pre-trained Weights for Segmentation",
     )
     parser.add_argument(
-        "--model_inpainting",
+        "--cfg_path",
         type=str,
-        default="2_inpainting_perceptual_shape.pkl",
-        help="Pre-trained Weights for Inpainting",
+        default="COCO-PanopticSegmentation/panoptic_fpn_R_50_3x.yaml",
+        help="Path to model cfg file relative to 'detectron2/model_zoo/configs' ",
+    )
+    parser.add_argument(
+        "--img_path",
+        type=str,
+        default="./img_input/",
+        help="Specify custom path for image",
     )
     args = parser.parse_args()
 

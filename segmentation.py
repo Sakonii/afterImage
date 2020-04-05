@@ -1,64 +1,67 @@
 import numpy as np
 from cv2 import cv2
 
-from fastai.vision import open_image, image2np
-from fastai.callbacks.hooks import load_learner
-from fastai.utils.mem import gc
+from detectron2 import model_zoo
+from detectron2.engine import DefaultPredictor
+from detectron2.config import get_cfg
+from detectron2.utils.visualizer import Visualizer
+from detectron2.data import MetadataCatalog
 
 
 class Segmentation:
     "A Wrapper for Segmentation related objects"
 
-    def __init__(
-        self, fname_img, model, path_to_learner="./models", path_to_input="./img_input/"
-    ):
-        self.path_to_learner = path_to_learner
-        self.learn = load_learner(path=self.path_to_learner, file=model)
+    def __init__(self, modelWeights, cfgPath):
+        # Load Detection Model
+        self.cfg = get_cfg()
+        self.cfg.merge_from_file(model_zoo.get_config_file(cfgPath))
+        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.6  # set detection threshold
+        self.cfg.MODEL.WEIGHTS = modelWeights
+        self.cfg.MODEL.DEVICE = "cpu"
+        self.predict = DefaultPredictor(self.cfg)
 
-        "learn.data -> DataBunch, learn.data.c -> count(learn.data.classes)"
-        self.num_classes = self.learn.data.c
-        self.classes = self.learn.data.classes
+    def update_threshold(self, threshValue):
+        " Updates Detection Threshold On Trackbar Event"
+        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = threshValue / 100
+        self.predict = DefaultPredictor(self.cfg)
 
-        self.img_path = path_to_input + fname_img
-        self.img = open_image(self.img_path)
+    def tensor_to_np(self):
+        "Convert Tensors to OpenCV Comaptible Types"
+        # Convert to np.ndarray
+        self.mask = self.outputs["panoptic_seg"][0].numpy().astype(np.uint8)
+        self.maskDetails = self.outputs["panoptic_seg"][1]
 
     def show(self):
-        "Displays content input image and its corresponding segmentation in separate windows"
-
-        cv2.imshow("image", self.img)
+        "Displays content input image and its corresponding detected objects"
+        cv2.imshow("image", self.img_display)
         cv2.imshow("mask", self.mask)
 
+        # cv2.imshow(winname="afterImage", mat=self.img_display)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    global acc_camvid
-
-    def acc_camvid(self, input, target):
-        "Dummy accuracy metric (metric not required for inference)"
-        return None
-
-    def start_segmentation(self):
-        "Returns np.ndarray content input image, its segmented mask and the number of classes in the model"
-
-        self.pred = self.learn.predict(self.img)
-        self.mask = self.pred[0]
-
-        del self.pred
-        gc.collect()
-
-        "Convert from torch style Image to OpenCV compatible np.ndarray"
-        self.img = image2np(self.img.data * 255).astype(np.uint8)
-        cv2.cvtColor(src=self.img, dst=self.img, code=cv2.COLOR_BGR2RGB)
-
-        self.mask = image2np(self.mask.data).astype(np.uint8)
-        cv2.cvtColor(src=self.mask, dst=self.mask, code=cv2.COLOR_BGR2RGB)
-
-        self.img = cv2.resize(
-            self.img,
-            dsize=(self.mask.shape[1], self.mask.shape[0]),
-            interpolation=cv2.INTER_CUBIC,
+    def draw_segmentation(self, inPlace=False):
+        "Draw content input image and its corresponding detected torch objects [not inplace]"
+        v = Visualizer(
+            self.img_display[:, :, ::-1],
+            MetadataCatalog.get(self.cfg.DATASETS.TRAIN[0]),
+            scale=1.0,
         )
-        return self.img, self.mask, self.classes
+        v = v.draw_panoptic_seg_predictions(
+            self.outputs["panoptic_seg"][0].to("cpu"), self.outputs["panoptic_seg"][1]
+        )
+        if inPlace:
+            segImage = self.img_display = np.transpose(
+                v.get_image()[:, :, ::-1], (0, 1, 2)
+            )
+        return segImage
 
-
-acc_camvid = lambda: None
+    def start_segmentation(self, img):
+        "Updates and Returns bboxes, preds, scores and classes for next video frame"
+        self.img = img
+        self.img_display = np.copy(self.img)
+        # Model Prediction
+        self.outputs = self.predict(img)
+        self.tensor_to_np()
+        # self.show()
+        return (self.img, self.mask, self.maskDetails)
