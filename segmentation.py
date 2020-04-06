@@ -33,12 +33,10 @@ class Segmentation:
 
     def show(self):
         "Displays content input image and its corresponding detected objects"
-        cv2.imshow("image", self.img_display)
-        cv2.imshow("mask", self.mask)
-
-        # cv2.imshow(winname="afterImage", mat=self.img_display)
+        cv2.imshow("afterImage", self.img_display)
+        #cv2.imshow("mask", self.mask)
         cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
 
     def draw_segmentation(self, inPlace=False):
         "Draw content input image and its corresponding detected torch objects [not inplace]"
@@ -50,10 +48,9 @@ class Segmentation:
         v = v.draw_panoptic_seg_predictions(
             self.outputs["panoptic_seg"][0].to("cpu"), self.outputs["panoptic_seg"][1]
         )
+        segImage = np.transpose(v.get_image()[:, :, ::-1], (0, 1, 2))
         if inPlace:
-            segImage = self.img_display = np.transpose(
-                v.get_image()[:, :, ::-1], (0, 1, 2)
-            )
+            self.img_display = segImage
         return segImage
 
     def start_segmentation(self, img):
@@ -63,5 +60,7 @@ class Segmentation:
         # Model Prediction
         self.outputs = self.predict(img)
         self.tensor_to_np()
-        # self.show()
+        # Display Segmentation
+        self.draw_segmentation(inPlace=True)
+        self.show()
         return (self.img, self.mask, self.maskDetails)

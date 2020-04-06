@@ -7,13 +7,10 @@ from inpainting import FeatureLoss
 
 
 def main():
-    segmentation = Segmentation(    # img, mask, maskDetails
+    img, mask, maskDetails = Segmentation(
         modelWeights=args.model_segmentation, cfgPath=args.cfg_path
-    )#.start_segmentation(img=cv2.imread(args.img_path + args.image))
-    segmentation.start_segmentation(img=cv2.imread(args.img_path + args.image))
-    segmentation.draw_segmentation(inPlace=True)
-    segmentation.show()
-    #Inference(img, mask, maskDetails, model=args.model_inpainting).inference()
+    ).start_segmentation(img=cv2.imread(args.img_path + args.image))
+    Inference(img, mask, maskDetails, inpaintModel=args.model_inpainting).inference()
 
 
 if __name__ == "__main__":
@@ -35,6 +32,12 @@ if __name__ == "__main__":
         type=str,
         default="COCO-PanopticSegmentation/panoptic_fpn_R_50_3x.yaml",
         help="Path to model cfg file relative to 'detectron2/model_zoo/configs' ",
+    )
+    parser.add_argument(
+        "--model_inpainting",
+        type=str,
+        default="2_inpainting_perceptual_shape.pkl",
+        help="Weights for Inpainting",
     )
     parser.add_argument(
         "--img_path",
