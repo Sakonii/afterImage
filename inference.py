@@ -1,7 +1,7 @@
 from cv2 import cv2
 import numpy as np
 
-from inpainting import Inpainting
+from inpainting.inference import Inpainting
 from segmentation import Segmentation
 
 
@@ -36,7 +36,7 @@ class UI:
             image=mask,
             contours=[self.selectedObj],
             contourIdx=-1,
-            color=255,
+            color=(255,255,255),
             thickness=cv2.FILLED,
         )
         return mask
@@ -174,9 +174,15 @@ class Inference:
         self.ui.selectedObj = []
         self.show_objects(fromClean=False)
 
-    def inpaint(self, inPlace=False):
+    def inpaint(self, inPlace=True):
         "Inpainting"
-        self.ui.imgDisplay = Inpainting(self.img, self.inpaintModel).start_inpainting()
+        # Create mask for inpainting
+        inpaintMask = self.ui.selectedObj_to_mask(maskSize=self.img.shape)
+        self.ui.imgBuffer = np.copy(self.img)
+        # Inpaint
+        self.ui.imgDisplay = Inpainting(modelPath=self.inpaintModel).start_inpainting(
+            self.ui.imgBuffer, inpaintMask
+        )
         if inPlace:
             self.img_save(toDisk=False)
 

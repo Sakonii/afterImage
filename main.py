@@ -3,7 +3,6 @@ import argparse
 from cv2 import cv2
 from segmentation import Segmentation
 from inference import Inference
-from inpainting import FeatureLoss
 
 
 def main():
@@ -31,13 +30,13 @@ if __name__ == "__main__":
         "--cfg_path",
         type=str,
         default="COCO-PanopticSegmentation/panoptic_fpn_R_50_3x.yaml",
-        help="Path to model cfg file relative to 'detectron2/model_zoo/configs' ",
+        help="Path to model cfg file relative to './detectron2/model_zoo/configs' ",
     )
     parser.add_argument(
         "--model_inpainting",
         type=str,
-        default="2_inpainting_perceptual_shape.pkl",
-        help="Weights for Inpainting",
+        default="./models/1000000.pth",
+        help="Weights for Inpainting relative to ./inpainting/",
     )
     parser.add_argument(
         "--img_path",

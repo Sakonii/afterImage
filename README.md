@@ -42,7 +42,7 @@ https://github.com/facebookresearch/detectron2/blob/master/INSTALL.md
 
 ``` bash
 # Example:
-python3.7 main.py --video videoplayback2.mp4
+python3.7 main.py --image img.png
 
 # CLI Arguments:
 * '--image' : Filename of input image located at img_input/ directory
